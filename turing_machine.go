@@ -30,7 +30,8 @@ func NewTuringMachine(nstates, start, accept, reject int) *TuringMachine {
 }
 
 func (tm *TuringMachine) Accepts(in string) bool {
-    arr := []byte(in)
+    arr := make([]byte, len(in) + 1)
+    copy(arr, in)
 
     tm.cur = tm.start
 
