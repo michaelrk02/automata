@@ -69,7 +69,10 @@ func (pda *PushDownAutomata) feed(token byte) {
 }
 
 func (pda *PushDownAutomata) top() byte {
-    return pda.stack[len(pda.stack) - 1]
+    if len(pda.stack) > 1 {
+        return pda.stack[len(pda.stack) - 1]
+    }
+    return 0x00
 }
 
 func (pda *PushDownAutomata) push(symbol byte) {
