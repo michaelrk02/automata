@@ -36,12 +36,13 @@ func NewPushDownAutomata(nstates, start, final int) *PushDownAutomata {
     pda.States = make([]PDATransition, nstates)
     pda.start = start
     pda.final = final
-    pda.stack = make([]byte, 0)
     return pda
 }
 
 func (pda *PushDownAutomata) Accepts(in string) bool {
     pda.cur = pda.start
+    pda.stack = make([]byte, 0)
+
     for i := 0; i < len(in); i++ {
         pda.feed(in[i])
     }
@@ -60,16 +61,16 @@ func (pda *PushDownAutomata) feed(token byte) {
     pda.cur, op = fn(token, pda.top())
 
     switch op.(type) {
-    case PDAStackOpPush:
+    case *PDAStackOpPush:
         pda.push(op.(*PDAStackOpPush).Symbol)
-    case PDAStackOpPop:
+    case *PDAStackOpPop:
         pda.pop()
-    case PDAStackOpIgnore:
+    case *PDAStackOpIgnore:
     }
 }
 
 func (pda *PushDownAutomata) top() byte {
-    if len(pda.stack) > 1 {
+    if len(pda.stack) > 0 {
         return pda.stack[len(pda.stack) - 1]
     }
     return 0x00
